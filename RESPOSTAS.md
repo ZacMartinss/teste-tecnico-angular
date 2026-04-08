@@ -43,3 +43,17 @@ Para o campo de busca, implementei um fluxo reativo com os seguintes operadores:
 * **Estratégia Default:** O impacto de usar a estratégia padrão em listas imensas é a perda de fluidez na interface (quedas de FPS), já que o navegador ficaria sobrecarregado tentando validar centenas de itens desnecessariamente.
 
 ---
+
+## 3. Gerenciamento de Estado
+
+### 3.1. Angular Signals
+Implementei o contador do carrinho utilizando `signal` para o estado da lista e `computed` para o cálculo automático do valor total. 
+* O uso de `computed` garante que o cálculo só seja refeito se os itens da lista mudarem.
+* Utilizei a nova função `output()` (Angular 17+) em conjunto com um `effect()` para emitir o valor total para componentes pais de forma reativa.
+
+### 3.2. NgRx (Feature To-do)
+Estruturei a funcionalidade de tarefas seguindo o padrão Redux:
+* **Actions:** Definidas de forma clara para o fluxo de carregamento e interação.
+* **Reducer:** Implementado com `createReducer` para garantir a imutabilidade do estado.
+* **Selectors:** Criados para filtrar tarefas pendentes de forma performática.
+* **Effects:** Utilizei para gerenciar a "chamada HTTP" mockada, garantindo que a lógica assíncrona fique fora do componente.
