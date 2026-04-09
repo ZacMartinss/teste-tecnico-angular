@@ -1,4 +1,5 @@
 import { Component, signal, computed, effect, output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 interface ItemCarrinho {
   id: number;
@@ -10,45 +11,55 @@ interface ItemCarrinho {
 @Component({
   selector: 'app-carrinho-signals',
   standalone: true,
+
+  imports: [CommonModule], 
   template: `
-    <h3>Carrinho de Compras (Signals)</h3>
-    <ul>
-      @for (item of itens(); track item.id) {
-        <li>
-          {{ item.nome }} - {{ item.preco | currency:'BRL' }} 
-          <button (click)="remover(item.id)">Remover</button>
-        </li>
-      }
-    </ul>
-    <strong>Total: {{ total() | currency:'BRL' }}</strong>
-    <br>
-    <button (click)="adicionar('Novo Item', 50)">Adicionar Item (R$ 50)</button>
+    <div style="border: 1px solid #ccc; padding: 15px; border-radius: 8px;">
+      <h3>🛒 Carrinho de Compras (Signals)</h3>
+      
+      <ul>
+        @for (item of itens(); track item.id) {
+          <li style="margin-bottom: 8px;">
+            {{ item.nome }} - {{ item.preco | currency:'BRL' }} 
+            <button (click)="remover(item.id)" style="margin-left: 10px;">Remover</button>
+          </li>
+        } @empty {
+          <li>O carrinho está vazio.</li>
+        }
+      </ul>
+
+      <hr>
+      <strong>Total do Carrinho: {{ total() | currency:'BRL' }}</strong>
+      <br><br>
+      <button (click)="adicionar('Produto Exemplo', 49.90)">
+        Adicionar Item Teste (R$ 49,90)
+      </button>
+    </div>
   `
 })
 export class CarrinhoSignalsComponent {
-  // 1. Signal para a lista de itens
+
   itens = signal<ItemCarrinho[]>([]);
 
-  // 2. Computed para o total (calculado automaticamente)
   total = computed(() => 
     this.itens().reduce((acc, item) => acc + (item.quantidade * item.preco), 0)
   );
-
-  // 3. Novo output() do Angular 17+
   totalAlterado = output<number>();
-
+  
   constructor() {
-    // 4. Effect que avisa quando o total mudar
     effect(() => {
       this.totalAlterado.emit(this.total());
     });
   }
 
   adicionar(nome: string, preco: number) {
-    this.itens.update(lista => [
-      ...lista, 
-      { id: Date.now(), nome, quantidade: 1, preco }
-    ]);
+    const novoItem: ItemCarrinho = {
+      id: Date.now(),
+      nome,
+      quantidade: 1,
+      preco
+    };
+    this.itens.update(lista => [...lista, novoItem]);
   }
 
   remover(id: number) {

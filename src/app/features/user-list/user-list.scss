@@ -1,0 +1,73 @@
+.header {
+  background-color: #757575 !important;
+  color: white;
+  height: 64px;
+}
+
+.toolbar-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0 10px;
+  border-radius: 4px;
+  flex: 1;
+  max-width: 400px;
+
+  input {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 8px;
+    width: 100%;
+    outline: none;
+    &::placeholder { color: rgba(255, 255, 255, 0.7); }
+  }
+}
+
+.container {
+  padding: 20px 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 14px;
+  margin: 20px 0;
+}
+
+.user-card {
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.card-layout {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px !important;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name { font-weight: 500; }
+.user-email { color: #888; font-size: 13px; }
+.avatar { color: #ccc; font-size: 30px; width: 30px; height: 30px; }
+.spacer { flex: 1; }
+
+.fab-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #f44336 !important;
+}
