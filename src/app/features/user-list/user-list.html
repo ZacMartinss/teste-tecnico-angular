@@ -11,25 +11,41 @@
 <div class="container">
   <p class="subtitle">Usuários cadastrados</p>
 
-  <div *ngIf="loading()" class="loading-container">
-    <mat-spinner diameter="40"></mat-spinner>
-  </div>
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  }
 
-  <div *ngIf="!loading()">
-    <mat-card *ngFor="let user of filteredUsers()" class="user-card">
-      <mat-card-content class="card-layout">
-        <mat-icon class="avatar">person</mat-icon>
-        <div class="user-info">
-          <span class="user-name">{{ user.nome }}</span>
-          <span class="user-email">{{ user.email }}</span>
-        </div>
-        <span class="spacer"></span>
-        <button mat-icon-button (click)="openForm(user)">
-          <mat-icon>edit</mat-icon>
-        </button>
-      </mat-card-content>
-    </mat-card>
-  </div>
+  @if (errorMessage()) {
+    <div class="error-container">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <p>{{ errorMessage() }}</p>
+      <button mat-button (click)="load()">Tentar novamente</button>
+    </div>
+  }
+
+  @if (!loading() && !errorMessage()) {
+    <div class="user-list">
+      @for (user of filteredUsers(); track user.id) {
+        <mat-card class="user-card">
+          <mat-card-content class="card-layout">
+            <mat-icon class="avatar">person</mat-icon>
+            <div class="user-info">
+              <span class="user-name">{{ user.nome }}</span>
+              <span class="user-email">{{ user.email }}</span>
+            </div>
+            <span class="spacer"></span>
+            <button mat-icon-button (click)="openForm(user)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </mat-card-content>
+        </mat-card>
+      } @empty {
+        <p class="empty-message">Nenhum usuário encontrado.</p>
+      }
+    </div>
+  }
 
   <button mat-fab color="warn" class="fab-button" (click)="openForm()">
     <mat-icon>add</mat-icon>

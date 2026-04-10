@@ -32,7 +32,6 @@ import { UserFormComponent } from '../user-form/user-form.component';
   styleUrl: './user-list.scss'
 })
 export class UserListComponent implements OnInit {
-
   private userService = inject(UserService);
   private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
@@ -40,6 +39,7 @@ export class UserListComponent implements OnInit {
   searchControl = new FormControl('');
   filterText = signal('');
   loading = signal(false);
+  errorMessage = signal<string | null>(null);
   users = signal<User[]>([]);
 
   filteredUsers = computed(() => {
@@ -54,18 +54,21 @@ export class UserListComponent implements OnInit {
     this.searchControl.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef) 
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(value => this.filterText.set(value || ''));
   }
 
   load() {
     this.loading.set(true);
+    this.errorMessage.set(null);
+
     this.userService.getUsers().subscribe({
       next: (data) => {
         this.users.set(data);
         this.loading.set(false);
       },
       error: () => {
+        this.errorMessage.set('Ops! Ocorreu um erro ao carregar os usuários. Tente novamente.');
         this.loading.set(false);
       }
     });
